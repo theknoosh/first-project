@@ -5,10 +5,12 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  FlatList
 } from "react-native";
 
 import BookCount from "./Components/BookCount";
+import CustomActionButton from "./Components/CustomActionsButton";
 import { Ionicons } from "@expo/vector-icons";
 
 export default class App extends React.Component {
@@ -45,6 +47,47 @@ export default class App extends React.Component {
     );
   };
 
+  markAsRead = (selectedBook, index) => {
+    let newList = this.state.books.filter(book => book !== selectedBook);
+
+    this.setState(prevState => ({
+      books: newList,
+      readingCount: prevState.readingCount - 1,
+      readCount: prevState.readCount + 1
+    }));
+  };
+
+  renderItem = (item, index) => (
+    <View style={{ height: 50, flexDirection: "row" }}>
+      <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20 }}>
+        <Text>{item}</Text>
+      </View>
+
+      <CustomActionButton
+        style={{ width: 100, backgroundColor: "#1cb164" }}
+        onPress={() => this.markAsRead(item, index)}
+      >
+        <Text style={{ fontWeight: "bold", color: "white" }}>Mark as Read</Text>
+      </CustomActionButton>
+
+      {/* <TouchableOpacity onPress={() => this.markAsRead(item, index)}>
+        <View
+          style={{
+            width: 100,
+            height: 50,
+            backgroundColor: "#1cb164",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text style={{ fontWeight: "bold", color: "white" }}>
+            Mark as Read
+          </Text>
+        </View>
+      </TouchableOpacity> */}
+    </View>
+  );
+
   render() {
     return (
       // Full screen enclosing View
@@ -74,36 +117,34 @@ export default class App extends React.Component {
                 placeholder="Enter Book Name"
                 placeholderTextColor="grey"
               />
-              <TouchableOpacity
+
+              {/* Button with checkmark */}
+              <CustomActionButton
+                style={{ backgroundColor: "#1cb164" }}
                 onPress={() => this.addBook(this.state.textInputData)}
               >
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "#1cb164",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  <Ionicons name="ios-checkmark" color="white" size={50} />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.hideAddNewBook}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    backgroundColor: "#e53966",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                >
-                  <Ionicons name="ios-close" color="white" size={50} />
-                </View>
-              </TouchableOpacity>
+                <Ionicons name="ios-checkmark" color="white" size={50} />
+              </CustomActionButton>
+
+              {/* Close button */}
+              <CustomActionButton onPress={this.hideAddNewBook}>
+                <Ionicons name="ios-close" color="white" size={50} />
+              </CustomActionButton>
             </View>
           )}
+
+          <FlatList
+            data={this.state.books}
+            renderItem={({ item }, index) => this.renderItem(item, index)}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={
+              <View style={{ marginTop: 50, alignItems: "center" }}>
+                <Text style={{ fontWeight: "bold" }}>
+                  Not Reading Any Books
+                </Text>
+              </View>
+            }
+          />
 
           {/* Button View */}
           <TouchableOpacity
@@ -133,7 +174,7 @@ export default class App extends React.Component {
             flexDirection: "row"
           }}
         >
-          <BookCount title="Total" count={this.state.totalCount} />
+          <BookCount title="Book Title" count={this.state.totalCount} />
           <BookCount title="Reading" count={this.state.readingCount} />
           <BookCount title="Read" count={this.state.readCount} />
         </View>
