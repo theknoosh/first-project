@@ -58,33 +58,17 @@ export default class App extends React.Component {
   };
 
   renderItem = (item, index) => (
-    <View style={{ height: 50, flexDirection: "row" }}>
-      <View style={{ flex: 1, justifyContent: "center", paddingLeft: 20 }}>
+    <View style={styles.listItemContainer}>
+      <View style={styles.listItemTitleContainer}>
         <Text>{item}</Text>
       </View>
 
       <CustomActionButton
-        style={{ width: 100, backgroundColor: "#1cb164" }}
+        style={styles.markAsReadButton}
         onPress={() => this.markAsRead(item, index)}
       >
-        <Text style={{ fontWeight: "bold", color: "white" }}>Mark as Read</Text>
+        <Text style={styles.markAsReadButtonText}>Mark as Read</Text>
       </CustomActionButton>
-
-      {/* <TouchableOpacity onPress={() => this.markAsRead(item, index)}>
-        <View
-          style={{
-            width: 100,
-            height: 50,
-            backgroundColor: "#1cb164",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Text style={{ fontWeight: "bold", color: "white" }}>
-            Mark as Read
-          </Text>
-        </View>
-      </TouchableOpacity> */}
     </View>
   );
 
@@ -95,32 +79,24 @@ export default class App extends React.Component {
         <SafeAreaView />
 
         {/* Header View */}
-        <View
-          style={{
-            height: 75,
-            borderBottomWidth: 0.5,
-            borderBottomColor: "#cbcdcb",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Text style={{ fontSize: 26 }}>Book Worm</Text>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Book Worm</Text>
         </View>
 
         {/* Body view */}
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           {this.state.isAddNewBookVisible && (
-            <View style={{ height: 50, flexDirection: "row" }}>
+            <View style={styles.textInputContainer}>
               <TextInput
+                style={styles.textInput}
                 onChangeText={text => this.setState({ textInputData: text })}
-                style={{ flex: 1, backgroundColor: "#d5d7d7", paddingLeft: 40 }}
                 placeholder="Enter Book Name"
                 placeholderTextColor="grey"
               />
 
               {/* Button with checkmark */}
               <CustomActionButton
-                style={{ backgroundColor: "#1cb164" }}
+                style={styles.checkmarkButton}
                 onPress={() => this.addBook(this.state.textInputData)}
               >
                 <Ionicons name="ios-checkmark" color="white" size={50} />
@@ -138,42 +114,25 @@ export default class App extends React.Component {
             renderItem={({ item }, index) => this.renderItem(item, index)}
             keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={
-              <View style={{ marginTop: 50, alignItems: "center" }}>
-                <Text style={{ fontWeight: "bold" }}>
+              <View style={styles.listEmptyComponent}>
+                <Text style={styles.listEmptyComponentText}>
                   Not Reading Any Books
                 </Text>
               </View>
             }
           />
 
-          {/* Button View */}
-          <TouchableOpacity
+          {/* Round Button */}
+          <CustomActionButton
+            position="right"
+            style={styles.addNewBookButton}
             onPress={this.showAddNewBook}
-            style={{ position: "absolute", bottom: 20, right: 20 }}
           >
-            <View
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: "#3eaac6",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 30 }}>+</Text>
-            </View>
-          </TouchableOpacity>
+            <Text style={styles.addNewBookButtonText}>+</Text>
+          </CustomActionButton>
         </View>
         {/* Footer View*/}
-        <View
-          style={{
-            height: 75,
-            borderTopWidth: 0.5,
-            borderTopColor: "#cbcdcb",
-            flexDirection: "row"
-          }}
-        >
+        <View style={styles.footer}>
           <BookCount title="Book Title" count={this.state.totalCount} />
           <BookCount title="Reading" count={this.state.readingCount} />
           <BookCount title="Read" count={this.state.readCount} />
@@ -190,8 +149,64 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
     // alignItems: "center"
   },
-  box: {
+  header: {
+    height: 75,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#cbcdcb",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  headerTitle: {
+    fontSize: 26
+  },
+  textInputContainer: {
+    height: 50,
+    flexDirection: "row"
+  },
+  textInput: {
     flex: 1,
-    backgroundColor: "red"
+    backgroundColor: "#d5d7d7",
+    paddingLeft: 40
+  },
+  checkmarkButton: {
+    backgroundColor: "#1cb164"
+  },
+  listEmptyComponent: {
+    marginTop: 50,
+    alignItems: "center"
+  },
+  listEmptyComponentText: {
+    fontWeight: "bold"
+  },
+  addNewBookButton: {
+    backgroundColor: "#3eaac6",
+    borderRadius: 25
+  },
+  addNewBookButtonText: {
+    color: "white",
+    fontSize: 30
+  },
+  footer: {
+    height: 75,
+    borderTopWidth: 0.5,
+    borderTopColor: "#cbcdcb",
+    flexDirection: "row"
+  },
+  listItemContainer: {
+    height: 50,
+    flexDirection: "row"
+  },
+  listItemTitleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: 20
+  },
+  markAsReadButton: {
+    width: 100,
+    backgroundColor: "#1cb164"
+  },
+  markAsReadButtonText: {
+    fontWeight: "bold",
+    color: "white"
   }
 });

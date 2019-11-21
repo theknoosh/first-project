@@ -2,11 +2,23 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 
-const CustomActionButton = ({ children, onPress, style }) => (
-  <TouchableOpacity onPress={onPress}>
-    <View style={[styles.button, style]}>{children}</View>
-  </TouchableOpacity>
-);
+function getPosition(position) {
+  switch (position) {
+    case "left":
+      return { position: "absolute", left: 20, bottom: 20 };
+    default:
+      return { position: "absolute", right: 20, bottom: 20 };
+  }
+}
+
+const CustomActionButton = ({ children, onPress, style, position }) => {
+  const floatingActionButton = position ? getPosition(position) : [];
+  return (
+    <TouchableOpacity style={floatingActionButton} onPress={onPress}>
+      <View style={[styles.button, style]}>{children}</View>
+    </TouchableOpacity>
+  );
+};
 
 CustomActionButton.propTypes = {
   onPress: PropTypes.func.isRequired,
