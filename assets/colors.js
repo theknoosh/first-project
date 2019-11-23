@@ -1,0 +1,12 @@
+const colors = {
+  bgSuccess: "#15dc5e",
+  bgError: "#f94e32",
+  bgPrimary: "#0E9CE8",
+  bgMain: "#2E424D",
+  bgTextInput: "#ececec",
+  txtPlaceholder: "grey",
+  borderColor: "#E9E9E9",
+  logoColor: "#bada55"
+};
+
+export default colors;
