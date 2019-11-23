@@ -36,7 +36,7 @@ export default class WelcomeScreen extends React.Component {
               marginBottom: 10
             }}
             title="Login"
-            onPress={() => alert("login")}
+            onPress={() => this.props.navigation.navigate("HomeScreen")}
           >
             <Text style={{ fontWeight: "300", color: "white" }}>Login</Text>
           </CustomActionButton>
@@ -48,7 +48,7 @@ export default class WelcomeScreen extends React.Component {
               borderColor: colors.bgError
             }}
             title="Sign Up"
-            onPress={() => alert("Sign Up")}
+            onPress={() => this.props.navigation.navigate("SignUpScreen")}
           >
             <Text style={{ fontWeight: "300", color: "white" }}>Sign Up</Text>
           </CustomActionButton>

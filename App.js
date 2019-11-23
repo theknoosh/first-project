@@ -10,12 +10,28 @@ import {
 } from "react-native";
 
 import WelcomeScreen from "./Screens/AppSwitchNavigator/WelcomeScreen";
+import HomeScreen from "./Screens/HomeScreen";
+import SignUpScreen from "./Screens/SignUpScreen";
+
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
+
+import { createStackNavigator } from "react-navigation-stack";
 
 const App = () => <AppContainer />;
 
+const LoginStackNavigator = createStackNavigator({
+  WelcomeScreen: {
+    screen: WelcomeScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUpScreen
+});
+
 const AppSwitchNavigator = createSwitchNavigator({
-  WelcomeScreen
+  LoginStackNavigator,
+  HomeScreen
 });
 
 const AppContainer = createAppContainer(AppSwitchNavigator);

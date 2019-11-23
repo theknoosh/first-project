@@ -159,7 +159,7 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-export default HomeScreen;
+// export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
