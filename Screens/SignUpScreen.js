@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import CustomActionButton from "../Components/CustomActionsButton";
 
 class SignUpScreen extends Component {
   render() {

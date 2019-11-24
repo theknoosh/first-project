@@ -26,20 +26,13 @@ export default class HomeScreen extends React.Component {
       textInputData: "",
       books: []
     };
-    console.log("constructor");
   }
 
-  componentDidMount() {
-    console.log("did mount");
-  }
+  componentDidMount() {}
 
-  componentDidUpdate() {
-    console.log("update");
-  }
+  componentDidUpdate() {}
 
-  componentWillUnmount() {
-    console.log("unmount");
-  }
+  componentWillUnmount() {}
 
   showAddNewBook = () => {
     this.setState({ isAddNewBookVisible: true });
@@ -88,7 +81,6 @@ export default class HomeScreen extends React.Component {
   );
 
   render() {
-    console.log("render");
     return (
       // Full screen enclosing View
       <View style={styles.container}>
