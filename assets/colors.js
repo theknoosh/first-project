@@ -6,7 +6,9 @@ const colors = {
   bgTextInput: "#ececec",
   txtPlaceholder: "grey",
   borderColor: "#E9E9E9",
-  logoColor: "#bada55"
+  logoColor: "#bada55",
+  txtWhite: "white",
+  btTextInputDark: "#b6b6b6"
 };
 
 export default colors;

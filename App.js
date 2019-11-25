@@ -11,7 +11,7 @@ import {
 
 import WelcomeScreen from "./Screens/AppSwitchNavigator/WelcomeScreen";
 import HomeScreen from "./Screens/HomeScreen";
-import SignUpScreen from "./Screens/SignUpScreen";
+import LoginScreen from "./Screens/LoginScreen";
 import SettingsScreen from "./Screens/SettingsScreen";
 
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
@@ -21,22 +21,49 @@ import { createDrawerNavigator } from "react-navigation-drawer";
 
 import { Ionicons } from "@expo/vector-icons";
 import CustomDrawerComponent from "./Screens/DrawerNavigator/CustomDrawerComponent";
+import colors from "./assets/colors";
 
-const App = () => <AppContainer />;
+import * as firebase from "firebase/app";
+import { firebaseConfig } from "./config/config";
 
-const LoginStackNavigator = createStackNavigator({
-  WelcomeScreen: {
-    screen: WelcomeScreen,
-    navigationOptions: {
-      header: null
-      // headerBackTitle: null
+class App extends React.Component {
+  constructor() {
+    super();
+    this.initializeFirebase();
+  }
+
+  initializeFirebase = () => {
+    firebase.initializeApp(firebaseConfig);
+  };
+  render() {
+    return <AppContainer />;
+  }
+}
+// const App = () => <AppContainer />;
+
+const LoginStackNavigator = createStackNavigator(
+  {
+    WelcomeScreen: {
+      screen: WelcomeScreen,
+      navigationOptions: {
+        header: null
+        // headerBackTitle: null
+      }
+    },
+    LoginScreen: {
+      screen: LoginScreen,
+      navigationOptions: {}
     }
   },
-  SignUpScreen: {
-    screen: SignUpScreen,
-    navigationOptions: {}
+  {
+    mode: "modal",
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: colors.bgMain
+      }
+    }
   }
-});
+);
 
 const AppDrawerNavigator = createDrawerNavigator(
   {
