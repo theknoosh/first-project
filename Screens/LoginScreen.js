@@ -30,6 +30,7 @@ class LoginScreen extends Component {
         if (response) {
           this.setState({ isLoading: false });
           // navigate the user
+          this.props.navigation.navigate("LoadingScreen");
         }
       } catch (error) {
         this.setState({ isLoading: false });

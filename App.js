@@ -13,6 +13,7 @@ import WelcomeScreen from "./Screens/AppSwitchNavigator/WelcomeScreen";
 import HomeScreen from "./Screens/HomeScreen";
 import LoginScreen from "./Screens/LoginScreen";
 import SettingsScreen from "./Screens/SettingsScreen";
+import LoadingScreen from "./Screens/AppSwitchNavigator/LoadingScreen";
 
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 
@@ -88,6 +89,7 @@ const AppDrawerNavigator = createDrawerNavigator(
 );
 
 const AppSwitchNavigator = createSwitchNavigator({
+  LoadingScreen,
   LoginStackNavigator,
   AppDrawerNavigator
 });
