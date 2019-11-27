@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ActivityIndicator
+} from "react-native";
 import CustomActionButton from "../Components/CustomActionsButton";
 import colors from "../assets/colors";
 import * as firebase from "firebase/app";
@@ -14,9 +20,34 @@ class LoginScreen extends Component {
       isLoading: false
     };
   }
-  onSignIn = () => {};
+  onSignIn = async () => {
+    if (this.state.email && this.state.password) {
+      this.setState({ isLoading: true });
+      try {
+        const response = await firebase
+          .auth()
+          .signInWithEmailAndPassword(this.state.email, this.state.password);
+        if (response) {
+          this.setState({ isLoading: false });
+          // navigate the user
+        }
+      } catch (error) {
+        this.setState({ isLoading: false });
+        switch (error.code) {
+          case "auth/user-not-found":
+            alert("A user with that email does not exist. Try siging up");
+            break;
+          case "auth/invalid-email":
+            alert("Please enter a valid email address");
+        }
+      }
+    } else {
+      alert("Please enter an email address and password");
+    }
+  };
   onSignUp = async () => {
     if (this.state.email && this.state.password) {
+      this.setState({ isLoading: true });
       try {
         const response = await firebase
           .auth()
@@ -24,7 +55,13 @@ class LoginScreen extends Component {
             this.state.email,
             this.state.password
           );
+        if (response) {
+          this.setState({ isLoading: false });
+          // sign in the user
+          this.onSignIn(this.state.email, this.state.password);
+        }
       } catch (error) {
+        this.setState({ isLoading: false });
         if (error.code == "auth/email-already-in-use") {
           alert("User already exists. Try logging in.");
         }
@@ -37,6 +74,21 @@ class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        {this.state.isLoading ? (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+                elevation: 1000
+              }
+            ]}
+          >
+            <ActivityIndicator size="large" color={colors.logoColor} />
+          </View>
+        ) : null}
         <View style={{ flex: 1, justifyContent: "center" }}>
           <TextInput
             style={styles.textInput}
