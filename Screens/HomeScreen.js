@@ -9,16 +9,22 @@ import {
   FlatList
 } from "react-native";
 
+require("firebase/auth");
+require("firebase/storage");
+require("firebase/database");
+
 import BookCount from "../Components/BookCount";
 import CustomActionButton from "../Components/CustomActionsButton";
 import { Ionicons } from "@expo/vector-icons";
 
 import colors from "../assets/colors";
+import * as firebase from "firebase/app";
 
 export default class HomeScreen extends React.Component {
   constructor() {
     super();
     this.state = {
+      currentUser: {},
       totalCount: 0,
       readingCount: 0,
       readCount: 0,
@@ -30,7 +36,17 @@ export default class HomeScreen extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount = async () => {
+    const { navigation } = this.props;
+    const user = navigation.getParam("user");
+    const currentUserData = await firebase
+      .database()
+      .ref("users")
+      .child(user.uid)
+      .once("value");
+
+    this.setState({ currentUser: currentUserData.val() });
+  };
 
   componentDidUpdate() {}
 
@@ -44,19 +60,50 @@ export default class HomeScreen extends React.Component {
     this.setState({ isAddNewBookVisible: false });
   };
 
-  addBook = book => {
-    this.setState(
-      (state, props) => ({
-        books: [...state.books, book],
-        booksReading: [...state.booksReading, book],
-        // totalCount: state.totalCount + 1,
-        // readingCount: state.readingCount + 1
-        isAddNewBookVisible: false
-      }),
-      () => {
-        console.log(this.state.books);
+  addBook = async book => {
+    try {
+      // books
+      // users UID
+      // book id(key)
+      // books data
+      const snapshot = await firebase
+        .database()
+        .ref("books")
+        .child(this.state.currentUser.uid)
+        .orderByChild("name")
+        .equalTo(book)
+        .once("value");
+
+      if (snapshot.exists()) {
+        alert("Unable to add as book already exists");
+      } else {
+        const key = await firebase
+          .database()
+          .ref("books")
+          .child(this.state.currentUser.uid)
+          .push().key;
+        const response = await firebase
+          .database()
+          .ref("books")
+          .child(this.state.currentUser.uid)
+          .child(key)
+          .set({ name: book, read: false });
+        this.setState(
+          (state, props) => ({
+            books: [...state.books, book],
+            booksReading: [...state.booksReading, book],
+            // totalCount: state.totalCount + 1,
+            // readingCount: state.readingCount + 1
+            isAddNewBookVisible: false
+          }),
+          () => {
+            console.log(this.state.books);
+          }
+        );
       }
-    );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   markAsRead = (selectedBook, index) => {
