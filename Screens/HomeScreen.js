@@ -23,6 +23,7 @@ import * as firebase from "firebase/app";
 import { snapshotToArray } from "../Helpers/firebaseHelpers";
 
 import ListItem from "../Components/ListItem";
+import * as Animatable from "react-native-animatable";
 
 export default class HomeScreen extends React.Component {
   constructor() {
@@ -38,6 +39,7 @@ export default class HomeScreen extends React.Component {
       booksReading: [],
       booksRead: []
     };
+    this.textInputRef = null;
   }
 
   componentDidMount = async () => {
@@ -78,6 +80,8 @@ export default class HomeScreen extends React.Component {
   };
 
   addBook = async book => {
+    this.setState({ textInputData: "" });
+    this.textInputRef.setNativeProps({ text: "" });
     try {
       // books
       // users UID
@@ -194,7 +198,18 @@ export default class HomeScreen extends React.Component {
 
         {/* Body view */}
         <View style={styles.container}>
-          {this.state.isAddNewBookVisible && (
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={text => this.setState({ textInputData: text })}
+              placeholder="Enter Book Name"
+              placeholderTextColor={colors.txtPlaceholder}
+              ref={component => {
+                this.textInputRef = component;
+              }}
+            />
+          </View>
+          {/*this.state.isAddNewBookVisible && (
             <View style={styles.textInputContainer}>
               <TextInput
                 style={styles.textInput}
@@ -203,7 +218,7 @@ export default class HomeScreen extends React.Component {
                 placeholderTextColor="grey"
               />
 
-              {/* Button with checkmark */}
+              {/* Button with checkmark}
               <CustomActionButton
                 style={styles.checkmarkButton}
                 onPress={() => this.addBook(this.state.textInputData)}
@@ -211,12 +226,12 @@ export default class HomeScreen extends React.Component {
                 <Ionicons name="ios-checkmark" color="white" size={50} />
               </CustomActionButton>
 
-              {/* Close button */}
+              {/* Close button}
               <CustomActionButton onPress={this.hideAddNewBook}>
                 <Ionicons name="ios-close" color="white" size={50} />
               </CustomActionButton>
             </View>
-          )}
+          )*/}
 
           <FlatList
             data={this.state.books}
@@ -232,13 +247,22 @@ export default class HomeScreen extends React.Component {
           />
 
           {/* Round Button */}
-          <CustomActionButton
-            position="right"
-            style={styles.addNewBookButton}
-            onPress={this.showAddNewBook}
+
+          <Animatable.View
+            animation={
+              this.state.textInputData.length > 0
+                ? "slideInRight"
+                : "slideOutRight"
+            }
           >
-            <Text style={styles.addNewBookButtonText}>+</Text>
-          </CustomActionButton>
+            <CustomActionButton
+              position="right"
+              style={styles.addNewBookButton}
+              onPress={() => this.addBook(this.state.textInputData)}
+            >
+              <Text style={styles.addNewBookButtonText}>+</Text>
+            </CustomActionButton>
+          </Animatable.View>
         </View>
         {/* Footer View*/}
         <View style={styles.footer}>
@@ -272,12 +296,18 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     height: 50,
-    flexDirection: "row"
+    flexDirection: "row",
+    margin: 5
   },
   textInput: {
     flex: 1,
-    backgroundColor: colors.bgTextInput,
-    paddingLeft: 40
+    backgroundColor: "transparent",
+    paddingLeft: 40,
+    borderColor: colors.listItemBG,
+    borderBottomWidth: 5,
+    fontSize: 22,
+    fontWeight: "200",
+    color: colors.txtWhite
   },
   checkmarkButton: {
     backgroundColor: colors.bgSuccess

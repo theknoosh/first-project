@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 function getPosition(position) {
   switch (position) {
     case "left":
-      return { position: "absolute", left: 20, bottom: 20 };
+      return { position: "absolute", left: 20, bottom: 270 };
     default:
-      return { position: "absolute", right: 20, bottom: 20 };
+      return { position: "absolute", right: 20, bottom: 270 };
   }
 }
 
