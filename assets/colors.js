@@ -8,7 +8,8 @@ const colors = {
   borderColor: "#E9E9E9",
   logoColor: "#bada55",
   txtWhite: "white",
-  btTextInputDark: "#b6b6b6"
+  btTextInputDark: "#b6b6b6",
+  listItemBG: "#354D58DA"
 };
 
 export default colors;

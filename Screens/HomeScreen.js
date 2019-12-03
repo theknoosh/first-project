@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TextInput,
-  FlatList
+  FlatList,
+  Image
 } from "react-native";
 
 require("firebase/auth");
@@ -20,6 +21,8 @@ import { Ionicons } from "@expo/vector-icons";
 import colors from "../assets/colors";
 import * as firebase from "firebase/app";
 import { snapshotToArray } from "../Helpers/firebaseHelpers";
+
+import ListItem from "../Components/ListItem";
 
 export default class HomeScreen extends React.Component {
   constructor() {
@@ -121,35 +124,41 @@ export default class HomeScreen extends React.Component {
     }
   };
 
-  markAsRead = (selectedBook, index) => {
-    let books = this.state.books.map(book => {
-      if (book.name == selectedBook.name) {
-        return { ...book, read: true };
-      }
-      return book;
-    });
-    let booksReading = this.state.booksReading.filter(
-      book => book.name !== selectedBook.name
-    );
+  markAsRead = async (selectedBook, index) => {
+    try {
+      await firebase
+        .database()
+        .ref("books")
+        .child(this.state.currentUser.uid)
+        .child(selectedBook.key)
+        .update({ read: true });
+      let books = this.state.books.map(book => {
+        if (book.name == selectedBook.name) {
+          return { ...book, read: true };
+        }
+        return book;
+      });
+      let booksReading = this.state.booksReading.filter(
+        book => book.name !== selectedBook.name
+      );
 
-    this.setState(prevState => ({
-      books: books,
-      booksReading: booksReading,
-      booksRead: [
-        ...prevState.booksRead,
-        { name: selectedBook.name, read: true }
-      ]
-      // readingCount: prevState.readingCount - 1,
-      // readCount: prevState.readCount + 1
-    }));
+      this.setState(prevState => ({
+        books: books,
+        booksReading: booksReading,
+        booksRead: [
+          ...prevState.booksRead,
+          { name: selectedBook.name, read: true }
+        ]
+        // readingCount: prevState.readingCount - 1,
+        // readCount: prevState.readCount + 1
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   renderItem = (item, index) => (
-    <View style={styles.listItemContainer}>
-      <View style={styles.listItemTitleContainer}>
-        <Text>{item.name}</Text>
-      </View>
-
+    <ListItem item={item}>
       {item.read ? (
         <Ionicons name="ios-checkmark" color={colors.logoColor} size={30} />
       ) : (
@@ -160,7 +169,16 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.markAsReadButtonText}>Mark as Read</Text>
         </CustomActionButton>
       )}
-    </View>
+    </ListItem>
+    // <View style={styles.listItemContainer}>
+    //   <View style={styles.imageContainer}>
+    //     <Image source={require("../assets/icon.png")} style={styles.image} />
+    //   </View>
+    //   <View style={styles.listItemTitleContainer}>
+    //     <Text style={styles.listItemTitle}>{item.name}</Text>
+    //   </View>
+
+    // </View>
   );
 
   render() {
@@ -239,7 +257,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: colors.bgMain
     // alignItems: "center"
   },
   header: {
@@ -286,13 +304,32 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   listItemContainer: {
-    height: 50,
-    flexDirection: "row"
+    minHeight: 100,
+    flexDirection: "row",
+    backgroundColor: colors.listItemBG,
+    alignItems: "center",
+    marginVertical: 5
+  },
+  imageContainer: {
+    height: 70,
+    width: 70,
+    marginLeft: 10
+  },
+  image: {
+    flex: 1,
+    height: null,
+    width: null,
+    borderRadius: 35
   },
   listItemTitleContainer: {
     flex: 1,
     justifyContent: "center",
     paddingLeft: 20
+  },
+  listItemTitle: {
+    fontWeight: "200",
+    fontSize: 22,
+    color: colors.txtWhite
   },
   markAsReadButton: {
     width: 100,
