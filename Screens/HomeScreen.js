@@ -191,10 +191,9 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <SafeAreaView />
 
-        {/* Header View */}
-        <View style={styles.header}>
+        {/*<View style={styles.header}>
           <Text style={styles.headerTitle}>Book Worm</Text>
-        </View>
+        </View>*/}
 
         {/* Body view */}
         <View style={styles.container}>
@@ -264,12 +263,13 @@ export default class HomeScreen extends React.Component {
             </CustomActionButton>
           </Animatable.View>
         </View>
-        {/* Footer View*/}
-        <View style={styles.footer}>
+
+        {/* <View style={styles.footer}>
           <BookCount title="Total Books" count={this.state.books.length} />
           <BookCount title="Reading" count={this.state.booksReading.length} />
           <BookCount title="Read" count={this.state.booksRead.length} />
-        </View>
+        </View> */}
+
         <SafeAreaView />
       </View>
     );
